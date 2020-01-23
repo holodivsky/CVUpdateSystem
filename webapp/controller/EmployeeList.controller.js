@@ -10,8 +10,9 @@ sap.ui.define([
     "sap/ui/core/Fragment",
     "sap/ui/core/util/Export",
     "sap/ui/core/util/ExportTypeCSV",
-    "sap/ui/export/Spreadsheet"
-], function (BaseController, formatter, JSONModel, GroupHeaderListItem, FilterOperator, Filter, MessageBox, MessageToast, Fragment, Export, ExportTypeCSV, Spreadsheet) {
+    "sap/ui/export/Spreadsheet",
+    "sap/ui/model/Sorter"
+], function (BaseController, formatter, JSONModel, GroupHeaderListItem, FilterOperator, Filter, MessageBox, MessageToast, Fragment, Export, ExportTypeCSV, Spreadsheet, Sorter) {
     "use strict";
     return BaseController.extend("infopulse.cv.infopulse-cvapp-ui.controller.EmployeeList", {
         formatter: formatter,
@@ -255,7 +256,7 @@ sap.ui.define([
         },
 
         onExport: function () {
-            var listBinding = this.byId("employeeListTable").getBinding("items");
+            var listBinding = this.getEmployeeListItemsBinding();
             this.exportSpreadsheet({
                 workbook: {
                     columns: this.createColumnConfig()
@@ -265,10 +266,10 @@ sap.ui.define([
                     useBatch: true,
                     serviceUrl: listBinding.getModel().sServiceUrl,
                     headers: listBinding.getModel().getHeaders(),
-                    dataUrl: listBinding.getDownloadUrl(), // includes the $expand param.
+                    dataUrl: listBinding.getDownloadUrl(),
                     count: listBinding.getLength()
                 },
-                worker: true // should be false if mock server or CSP enabled
+                worker: true
             });
         },
 
@@ -281,43 +282,83 @@ sap.ui.define([
 
         createColumnConfig: function () {
             var aCols = [];
+
             aCols.push(
                 {
                     label: "Name",
                     type: "string",
-                    property: "NAME"
+                    property: "NAME",
+                    width: 25
                 },
                 {
-                    label: this.getResourceBundle("manageResumes.employeeTable.employeeDepartment.col"),
+                    label: "Department",
                     type: "string",
                     property: "DEPARTMENT"
                 },
                 {
-                    label: this.getResourceBundle("manageResumes.employeeTable.employeeDeliveryManager.col"),
+                    label: "Delivery Manager",
                     type: "string",
                     property: "MANAGER"
                 },
                 {
-                    label: this.getResourceBundle("manageResumes.employeeTable.employeeUpdateDate.col"),
+                    label: "CV update date",
                     type: "date",
-                    property: "UPDATED",
-                    inputFormat: "yyyymmdd",
-                    width: 25
+                    property: "UPDATED"
                 },
                 {
-                    label: this.getResourceBundle("manageResumes.employeeTable.employeeRequestDate.col"),
+                    label: "Request for update date",
                     type: "date",
-                    property: "REQUEST",
-                    inputFormat: "yyyymmdd"
+                    property: "REQUEST"
                 },
                 {
-                    label: this.getResourceBundle("manageResumes.employeeTable.employeeLastUploadDate.col"),
+                    label: "Last upload date",
                     type: "date",
-                    property: "UPLOAD",
-                    inputFormat: "yyyymmdd"
+                    property: "UPLOAD"
                 }
             );
             return aCols;
+        },
+
+        onOpenViewSettings: function (oEvent) {
+            var sDialogTab = "sort";
+
+            if (!this._oFragment) {
+                Fragment.load({
+                    name: "infopulse.cv.infopulse-cvapp-ui.view.SortGroup",
+                    controller: this
+                }).then(function (oPopover) {
+                    this._oFragment = oPopover;
+                    this.getView().addDependent(this._oFragment);
+                    this._oFragment.open(sDialogTab);
+                }.bind(this));
+            } else {
+                this._oFragment.open(sDialogTab);
+            }
+        },
+
+        onConfirmViewSettingsDialog: function (oEvent) {
+            var mParams = oEvent.getParameters();
+            var sPath;
+            var bDescending;
+            var aSorters = [];
+
+            if (mParams.groupItem) {
+                sPath = mParams.groupItem.getKey();
+                bDescending = mParams.groupDescending;
+                aSorters.push(new Sorter(sPath, bDescending, true));
+            }
+            if (mParams.sortItem) {
+                sPath = mParams.sortItem.getKey();
+                bDescending = mParams.sortDescending;
+                aSorters.push(new Sorter(sPath, bDescending));
+            }
+
+            this.getEmployeeListItemsBinding().sort(aSorters);
+        },
+
+        onShowEmployeePage: function (oEvent) {
+            var iItemId = oEvent.getSource().getBindingContext().getProperty("ID");
+            this.getRouter().navTo("employeePage", { employeeId: iItemId }, true);
         },
 
         onRefresh: function () {

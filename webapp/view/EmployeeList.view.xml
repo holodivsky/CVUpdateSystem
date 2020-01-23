@@ -115,6 +115,7 @@
                         <Button
                             tooltip="{i18n>manageResumes.employeeTable.toolBar.settings}"
                             icon="sap-icon://action-settings"
+                            press="onOpenViewSettings"
                         />
                         <Button
                             tooltip="{i18n>manageResumes.employeeTable.toolBar.export}"
@@ -160,7 +161,7 @@
                     </Column>
                 </columns>
                 <items>
-                    <ColumnListItem>
+                    <ColumnListItem type="Navigation" press="onShowEmployeePage">
                         <cells>
                             <core:Icon
                                 src="{ path: 'CVSTATUS', formatter: '.formatter.status'}"

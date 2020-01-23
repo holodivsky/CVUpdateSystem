@@ -22,6 +22,14 @@ sap.ui.define([
             }), "viewModel");
         },
         /**
+         * Convenience method for accessing the router.
+         * @public
+         * @returns {sap.ui.core.routing.Router} the router for this component
+         */
+        getRouter: function () {
+            return this.getOwnerComponent().getRouter();
+        },
+        /**
          * Convenience method for getting the view model by name.
          * @public
          * @param {string} [sName] the model name

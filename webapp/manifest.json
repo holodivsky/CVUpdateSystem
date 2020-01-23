@@ -94,17 +94,31 @@
             "routes": [
                 {
                     "pattern": "",
-                    "name": "employeelist",
+                    "name": "employeeList",
                     "target": [
-                        "employeelist"
+                        "employeeList"
                     ]
+                },
+                {
+                    "pattern": "employeePage/{employeeId}",
+                    "name": "employeePage",
+                    "target": "employeePage"
                 }
             ],
             "targets": {
-                "employeelist": {
+                "employeeList": {
                     "viewName": "EmployeeList",
-                    "viewId": "employeelist",
+                    "viewId": "employeeList",
                     "viewLevel": 1
+                },
+                "employeePage": {
+                    "viewName": "EmployeePage",
+                    "viewId": "employeePage",
+                    "viewLevel": 2
+                },
+                "notFound": {
+                    "viewName": "NotFoundPage",
+                    "viewId": "notFound"
                 }
             }
         }

@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <ViewSettingsDialog
+        id="viewSettingsDialog"
+        confirm=".onConfirmViewSettingsDialog"
+    >
+        <sortItems>
+            <ViewSettingsItem
+                text="Status"
+                key="CVSTATUS"
+                selected="true"
+            />
+            <ViewSettingsItem
+                text="Name"
+                key="NAME"
+            />
+            <ViewSettingsItem
+                text="Department"
+                key="DEPARTMENT"
+            />
+            <ViewSettingsItem
+                text="Manager"
+                key="MANAGER"
+            />
+            <ViewSettingsItem
+                text="CV update date"
+                key="UPDATED"
+            />
+            <ViewSettingsItem
+                text="Request for update date"
+                key="REQUEST"
+            />
+            <ViewSettingsItem
+                text="Last upload date"
+                key="UPLOAD"
+            />
+        </sortItems>
+        <groupItems>
+            <ViewSettingsItem
+                text="Manager"
+                key="MANAGER"
+            />
+            <ViewSettingsItem
+                text="Status"
+                key="CVSTATUS"
+            />
+            <ViewSettingsItem
+                text="Department"
+                key="DEPARTMENT"
+            />
+        </groupItems>
+    </ViewSettingsDialog>
+</core:FragmentDefinition>
