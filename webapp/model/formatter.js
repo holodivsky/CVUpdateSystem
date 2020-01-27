@@ -13,6 +13,7 @@ sap.ui.define([], function () {
                 return "sap-icon://sys-minus";
             }
         },
+
         color: function (status) {
             switch (status) {
             case "InProgress":
@@ -37,6 +38,7 @@ sap.ui.define([], function () {
                 return "Error";
             }
         },
+
         tooltip: function (status) {
             switch (status) {
             case "InProgress":
@@ -47,6 +49,17 @@ sap.ui.define([], function () {
                 return this.getResourceBundleText("manageResumes.filterBar.status.complete");
             default:
                 return this.getResourceBundleText("manageResumes.filterBar.status.needToUpdate");
+            }
+        },
+
+        getFileIcon: function (sIconCode) {
+            switch (sIconCode) {
+            case "application/pdf":
+                return "sap-icon://pdf-attachment";
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document": case "application/msword":
+                return "sap-icon://doc-attachment";
+            default:
+                return "sap-icon://ppt-attachment";
             }
         }
     };
